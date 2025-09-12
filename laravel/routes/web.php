@@ -15,4 +15,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+    
 });
+
+Route::get('/peg', function () {
+    return view('hrd.pegawai');    
+}
+);

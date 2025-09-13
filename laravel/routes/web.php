@@ -22,3 +22,9 @@ Route::get('/peg', function () {
     return view('hrd.pegawai');    
 }
 );
+
+Route::name('frog.')->group(function () {
+    Route::get('/frogs', [App\Http\Controllers\controller_frog::class, 'index'])->name('index');
+    Route::get('/frogs/create', [App\Http\Controllers\controller_frog::class, 'create'])->name('create');
+    Route::post('/frogs', [App\Http\Controllers\controller_frog::class, 'store'])->name('store');
+});

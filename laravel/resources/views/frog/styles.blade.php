@@ -95,4 +95,26 @@
         background-color: var(--ctp-mocha-surface2);
         color: var(--ctp-mocha-text);
     }
+    
+    .btn-lavender {
+        background-color: var(--ctp-mocha-lavender);
+        color: var(--ctp-mocha-base);
+        border: none;
+    }
+    
+    .btn-lavender:hover {
+        background-color: var(--ctp-mocha-mauve);
+        color: var(--ctp-mocha-base);
+    }
+    
+    .btn-teal {
+        background-color: var(--ctp-mocha-teal);
+        color: var(--ctp-mocha-base);
+        border: none;
+    }
+    
+    .btn-teal:hover {
+        background-color: var(--ctp-mocha-sky);
+        color: var(--ctp-mocha-base);
+    }
 </style>

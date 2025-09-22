@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,22 +14,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-    
-});
+Route::get('/', [App\Http\Controllers\controller_frog::class, 'index'])->name('frog.index');
 
 Route::get('/peg', function () {
     return view('hrd.pegawai');    
 }
 );
 
-Route::name('frog.')->group(function () {
-    Route::get('/frogs', [App\Http\Controllers\controller_frog::class, 'index'])->name('index');
-    Route::get('/frogs/create', [App\Http\Controllers\controller_frog::class, 'create'])->name('create');
-    Route::post('/frogs', [App\Http\Controllers\controller_frog::class, 'store'])->name('store');
-    Route::get('/frogs/{id}/edit', [App\Http\Controllers\controller_frog::class, 'edit'])->name('edit');
-    Route::put('/frogs/{id}', [App\Http\Controllers\controller_frog::class, 'update'])->name('update');
-    Route::delete('/frogs/{id}', [App\Http\Controllers\controller_frog::class, 'destroy'])->name('destroy');
-    Route::post('/frogs/restore-all', [App\Http\Controllers\controller_frog::class, 'restoreAll'])->name('restoreAll');
+Auth::routes();
+
+Route::middleware('auth')->group(function () {
+    Route::name('frog.')->group(function () {
+        Route::get('/create', [App\Http\Controllers\controller_frog::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\controller_frog::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [App\Http\Controllers\controller_frog::class, 'edit'])->name('edit');
+        Route::put('/{id}', [App\Http\Controllers\controller_frog::class, 'update'])->name('update');
+        Route::delete('/{id}', [App\Http\Controllers\controller_frog::class, 'destroy'])->name('destroy');
+        Route::post('/restore-all', [App\Http\Controllers\controller_frog::class, 'restoreAll'])->name('restoreAll');
+    });
 });
+

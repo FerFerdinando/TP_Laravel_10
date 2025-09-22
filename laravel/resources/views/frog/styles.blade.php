@@ -65,6 +65,7 @@
         background-color: var(--ctp-mocha-surface0);
         color: var(--ctp-mocha-text);
         border-color: var(--ctp-mocha-surface2);
+        border-radius: 0;
     }
     
     .form-control:focus, .form-select:focus {
@@ -72,12 +73,14 @@
         color: var(--ctp-mocha-text);
         border-color: var(--ctp-mocha-blue);
         box-shadow: 0 0 0 0.2rem rgba(var(--ctp-mocha-blue-rgb), 0.25);
+        border-radius: 0;
     }
     
     .btn-frog {
-        background-color: var(--ctp-mocha-teal);
+        background-color: var(--ctp-mocha-green);
         color: var(--ctp-mocha-base);
         border: none;
+        border-radius: 0;
     }
     
     .btn-frog:hover {
@@ -89,6 +92,7 @@
         background-color: var(--ctp-mocha-surface1);
         color: var(--ctp-mocha-text);
         border: none;
+        border-radius: 0;
     }
     
     .btn-back:hover {
@@ -100,6 +104,7 @@
         background-color: var(--ctp-mocha-lavender);
         color: var(--ctp-mocha-base);
         border: none;
+        border-radius: 0;
     }
     
     .btn-lavender:hover {
@@ -111,10 +116,46 @@
         background-color: var(--ctp-mocha-teal);
         color: var(--ctp-mocha-base);
         border: none;
+        border-radius: 0;
     }
     
     .btn-teal:hover {
         background-color: var(--ctp-mocha-sky);
         color: var(--ctp-mocha-base);
+    }
+    
+    .btn-active {
+        background-color: var(--ctp-mocha-yellow) !important;
+        color: var(--ctp-mocha-base) !important;
+        box-shadow: 0 0 0 0.2rem rgba(var(--ctp-mocha-yellow-rgb), 0.25);
+    }
+    
+    .frog-tooltip {
+        position: absolute;
+        background-color: var(--ctp-mocha-surface0);
+        color: var(--ctp-mocha-text);
+        padding: 8px;
+        border: 1px solid var(--ctp-mocha-surface2);
+        border-radius: 0;
+        max-width: 300px;
+        z-index: 1050;
+        font-size: 0.9em;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-content {
+        border-radius: 0;
+    }
+    
+    .btn {
+        border-radius: 0;
+    }
+    
+    .table {
+        border-radius: 0;
+    }
+    
+    .container {
+        max-width: 1200px;
     }
 </style>

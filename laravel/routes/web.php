@@ -21,7 +21,7 @@ Route::get('/peg', function () {
 }
 );
 
-Auth::routes();
+Auth::routes(['verify' => false, 'reset' => false]);
 
 Route::middleware('auth')->group(function () {
     Route::name('frog.')->group(function () {
@@ -33,4 +33,3 @@ Route::middleware('auth')->group(function () {
         Route::post('/restore-all', [App\Http\Controllers\controller_frog::class, 'restoreAll'])->name('restoreAll');
     });
 });
-

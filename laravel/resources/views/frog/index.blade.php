@@ -2,7 +2,7 @@
 <html data-bs-theme="dark">
 <head>
     <title>🐸 Frog List</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     @include('frog.styles')
 </head>
 <body>
@@ -10,10 +10,7 @@
         <div class="position-fixed top-0 end-0 p-3 z-3">
             <div class="d-flex align-items-center gap-2">
                 <span class="text-light small">Hi {{ explode(' ', Auth::user()->name)[0] }} 🐸 !</span>
-                <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('Are you sure you want to logout?')">Logout</button>
-                </form>
+                <button type="button" class="btn btn-secondary btn-sm" id="logoutBtn">Logout</button>
             </div>
         </div>
     @else
@@ -57,15 +54,31 @@
                 <a href="{{ route('frog.create') }}" class="btn btn-success">Add Frog</a>
                 <button type="button" class="btn btn-lavender" id="editModeBtn">Edit Frog</button>
                 <button type="button" class="btn btn-danger" id="deleteModeBtn">Delete Frog</button>
-                <form action="{{ route('frog.restoreAll') }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-info" onclick="return confirm('Restore all deleted frogs?')">Restore All</button>
-                </form>
+                <button type="button" class="btn btn-info" id="restoreBtn">Restore All</button>
             </div>
         @endif
     </div>
     
-    <!-- Delete Confirmation Modal -->
+    <!-- Generic Confirmation Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark border-0">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-light" id="confirmModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light" id="confirmModalBody">
+                    Are you sure?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmAction">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal (specific for delete) -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark border-0">
@@ -92,8 +105,16 @@
         @csrf
         @method('DELETE')
     </form>
+
+    <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
+    <form id="restoreForm" action="{{ route('frog.restoreAll') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const editModeBtn = document.getElementById('editModeBtn');
@@ -103,11 +124,19 @@
             const deleteForm = document.getElementById('deleteForm');
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
             const confirmDeleteBtn = document.getElementById('confirmDelete');
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            const confirmActionBtn = document.getElementById('confirmAction');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const restoreBtn = document.getElementById('restoreBtn');
             let selectedFrogId = null;
             let editMode = false;
             let deleteMode = false;
             let hoverTimeout = null;
             let tooltip = null;
+            let pendingAction = null;
+            let pendingForm = null;
+            let pendingMessage = '';
+            let pendingTitle = '';
             
             if (!editModeBtn) return; // If not logged in, skip
             
@@ -188,12 +217,50 @@
                 deleteModal.show();
             }
             
-            // Confirm delete
+            // Confirm delete (specific)
             confirmDeleteBtn.addEventListener('click', function() {
                 deleteForm.action = `/${selectedFrogId}`;
                 deleteForm.submit();
                 deleteModal.hide();
             });
+
+            // Generic confirm action
+            confirmActionBtn.addEventListener('click', function() {
+                if (pendingForm && pendingAction) {
+                    if (pendingAction === 'logout') {
+                        logoutForm.submit();
+                    } else if (pendingAction === 'restore') {
+                        restoreForm.submit();
+                    }
+                }
+                confirmModal.hide();
+            });
+
+            // Logout button
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    pendingAction = 'logout';
+                    pendingForm = logoutForm;
+                    pendingMessage = 'Are you sure you want to logout?';
+                    pendingTitle = 'Confirm Logout';
+                    document.getElementById('confirmModalBody').textContent = pendingMessage;
+                    document.getElementById('confirmModalLabel').textContent = pendingTitle;
+                    confirmModal.show();
+                });
+            }
+
+            // Restore button
+            if (restoreBtn) {
+                restoreBtn.addEventListener('click', function() {
+                    pendingAction = 'restore';
+                    pendingForm = restoreForm;
+                    pendingMessage = 'Restore all deleted frogs?';
+                    pendingTitle = 'Confirm Restore';
+                    document.getElementById('confirmModalBody').textContent = pendingMessage;
+                    document.getElementById('confirmModalLabel').textContent = pendingTitle;
+                    confirmModal.show();
+                });
+            }
             
             // Escape key to deactivate modes
             document.addEventListener('keydown', function(e) {

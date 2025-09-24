@@ -45,6 +45,7 @@
     body {
         background-color: var(--ctp-mocha-base);
         color: var(--ctp-mocha-text);
+        font-family: Arial, sans-serif;
     }
     
     .table-dark {
@@ -72,7 +73,7 @@
         background-color: var(--ctp-mocha-surface0);
         color: var(--ctp-mocha-text);
         border-color: var(--ctp-mocha-blue);
-        box-shadow: 0 0 0 0.2rem rgba(var(--ctp-mocha-blue-rgb), 0.25);
+        box-shadow: none;
         border-radius: 0;
     }
     
@@ -157,5 +158,57 @@
     
     .container {
         max-width: 1200px;
+    }
+
+    .login-box {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        padding: 40px;
+        background-color: var(--ctp-mocha-surface0);
+        border: 1px solid var(--ctp-mocha-surface2);
+        border-radius: 0;
+    }
+
+    .frog-emoji {
+        font-size: 4rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .login-title {
+        text-align: center;
+        margin-bottom: 30px;
+        color: var(--ctp-mocha-text);
+    }
+
+    .form-label {
+        color: var(--ctp-mocha-text);
+    }
+
+    .btn-primary {
+        background-color: var(--ctp-mocha-green);
+        color: var(--ctp-mocha-base);
+        border: none;
+        border-radius: 0;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--ctp-mocha-teal);
+        color: var(--ctp-mocha-base);
+    }
+
+    .btn-secondary {
+        background-color: var(--ctp-mocha-surface1);
+        color: var(--ctp-mocha-text);
+        border: 1px solid var(--ctp-mocha-surface2);
+        border-radius: 0;
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--ctp-mocha-surface2);
+        color: var(--ctp-mocha-text);
     }
 </style>

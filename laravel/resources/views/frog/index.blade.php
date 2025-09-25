@@ -10,6 +10,7 @@
         <div class="position-fixed top-0 end-0 p-3 z-3">
             <div class="d-flex align-items-center gap-2">
                 <span class="text-light small">Hi {{ explode(' ', Auth::user()->name)[0] }} 🐸 !</span>
+                <a href="{{ route('profile.edit') }}" class="btn btn-outline-light btn-sm">Edit Profile</a>
                 <button type="button" class="btn btn-secondary btn-sm" id="logoutBtn">Logout</button>
             </div>
         </div>

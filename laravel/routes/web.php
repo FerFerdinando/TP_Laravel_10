@@ -21,9 +21,14 @@ Route::get('/peg', function () {
 }
 );
 
-Auth::routes(['verify' => false, 'reset' => false]);
+Auth::routes();
 
 Route::middleware('auth')->group(function () {
+    // Profile routes
+    Route::get('/profile/edit', [App\Http\Controllers\Auth\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [App\Http\Controllers\Auth\ProfileController::class, 'update'])->name('profile.update');
+    
+    // Frog routes
     Route::name('frog.')->group(function () {
         Route::get('/create', [App\Http\Controllers\controller_frog::class, 'create'])->name('create');
         Route::post('/', [App\Http\Controllers\controller_frog::class, 'store'])->name('store');

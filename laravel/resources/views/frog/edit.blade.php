@@ -2,7 +2,7 @@
 <html data-bs-theme="dark">
 <head>
     <title>🐸 Edit Frog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     @include('frog.styles')
 </head>
 <body>
@@ -11,13 +11,24 @@
         
         <a href="{{ route('frog.index') }}" class="btn btn-back mb-4">← Back to List</a>
         
-        <form method="POST" action="{{ route('frog.update', $frog->id) }}" class="bg-dark p-4 rounded">
-            @csrf
-            @method('PUT')
+            <form method="POST" action="{{ route('frog.update', $frog->id) }}" class="bg-dark p-4 rounded" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="name" class="form-label">Name:</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $frog->name) }}" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="picture" class="form-label">Picture (optional):</label>
+                    @if($frog->picture)
+                        <div class="mb-2">
+                            <img src="{{ asset('storage/' . $frog->picture) }}" alt="Current Picture" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                        </div>
+                    @endif
+                    <input type="file" class="form-control" id="picture" name="picture" accept="image/*">
+                    <small class="text-muted">Max 2MB. Supported formats: JPEG, PNG, JPG, GIF</small>
                 </div>
                 
                 <div class="col-md-6 mb-3">
@@ -60,6 +71,6 @@
         </form>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
         <div class="frog-emoji">🐸</div>
         <h2 class="login-title">Make Froggy Cred!</h2>
         
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
             @csrf
             
             <div class="mb-3">
@@ -27,6 +27,31 @@
                 @error('email')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone (optional)</label>
+                <input id="phone" type="tel" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}">
+                @error('phone')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="country" class="form-label">Country (optional)</label>
+                <input id="country" type="text" class="form-control @error('country') is-invalid @enderror" name="country" value="{{ old('country') }}">
+                @error('country')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="profile_picture" class="form-label">Profile Picture (optional)</label>
+                <input id="profile_picture" type="file" class="form-control @error('profile_picture') is-invalid @enderror" name="profile_picture" accept="image/*">
+                @error('profile_picture')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                <small class="text-muted">Max 2MB. Supported formats: JPEG, PNG, JPG, GIF</small>
             </div>
 
             <div class="mb-3">

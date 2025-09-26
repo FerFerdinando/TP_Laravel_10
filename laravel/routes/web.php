@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', [App\Http\Controllers\controller_frog::class, 'index'])->name('frog.index');
+Route::get('/', [App\Http\Controllers\controller_frog::class, 'index'])->name('frog.index')->middleware('auth');
 
 Route::get('/peg', function () {
     return view('hrd.pegawai');    

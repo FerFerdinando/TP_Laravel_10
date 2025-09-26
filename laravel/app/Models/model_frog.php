@@ -14,6 +14,7 @@ class model_frog extends Model
     
     protected $fillable = [
         'name',
+        'picture',
         'color', 
         'age',
         'habitat',

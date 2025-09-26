@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\model_frog;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class controller_frog extends Controller
 {
@@ -23,12 +24,17 @@ class controller_frog extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:frog,name',
+            'picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'color' => 'required|string|max:255',
             'age' => 'required|integer|min:0',
             'habitat' => 'required|string|max:255',
             'is_poisonous' => 'required|boolean',
             'description' => 'string',
             'weight' => 'required|numeric|min:0'
+        ], [
+            'picture.image' => 'Picture must be an image.',
+            'picture.mimes' => 'Picture must be jpeg, png, jpg, or gif.',
+            'picture.max' => 'Picture must not be greater than 2MB.',
         ]);
 
         if ($validator->fails()) {
@@ -37,7 +43,17 @@ class controller_frog extends Controller
                 ->withInput();
         }
 
-        model_frog::create($request->all());
+        $data = $request->all();
+
+        // Handle picture upload
+        if ($request->hasFile('picture')) {
+            $file = $request->file('picture');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('frogs', $filename, 'public');
+            $data['picture'] = $path;
+        }
+
+        model_frog::create($data);
 
         return redirect()->route('frog.index')->with('success', 'Froggy berhasil!');
     }
@@ -54,12 +70,17 @@ class controller_frog extends Controller
         
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:frog,name,' . $frog->id,
+            'picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'color' => 'required|string|max:255',
             'age' => 'required|integer|min:0',
             'habitat' => 'required|string|max:255',
             'is_poisonous' => 'required|boolean',
             'description' => 'string',
             'weight' => 'required|numeric|min:0'
+        ], [
+            'picture.image' => 'Picture must be an image.',
+            'picture.mimes' => 'Picture must be jpeg, png, jpg, or gif.',
+            'picture.max' => 'Picture must not be greater than 2MB.',
         ]);
 
         if ($validator->fails()) {
@@ -68,7 +89,22 @@ class controller_frog extends Controller
                 ->withInput();
         }
 
-        $frog->update($request->all());
+        $data = $request->all();
+
+        // Handle picture upload
+        if ($request->hasFile('picture')) {
+            // Delete old image if exists
+            if ($frog->picture) {
+                Storage::disk('public')->delete($frog->picture);
+            }
+
+            $file = $request->file('picture');
+            $filename = time() . '_' . $frog->id . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('frogs', $filename, 'public');
+            $data['picture'] = $path;
+        }
+
+        $frog->update($data);
 
         return redirect()->route('frog.index')->with('success', 'Frog updated successfully!');
     }

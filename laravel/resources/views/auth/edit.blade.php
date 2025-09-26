@@ -16,7 +16,7 @@
             </div>
         @endif
         
-        <form method="POST" action="{{ route('profile.update') }}">
+        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -30,10 +30,40 @@
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" required>
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" required readonly>
                 @error('email')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone (optional)</label>
+                <input id="phone" type="tel" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone', $user->phone) }}">
+                @error('phone')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="country" class="form-label">Country (optional)</label>
+                <input id="country" type="text" class="form-control @error('country') is-invalid @enderror" name="country" value="{{ old('country', $user->country) }}">
+                @error('country')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="profile_picture" class="form-label">Profile Picture (optional)</label>
+                @if($user->profile_picture)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Current Profile Picture" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                @endif
+                <input id="profile_picture" type="file" class="form-control @error('profile_picture') is-invalid @enderror" name="profile_picture" accept="image/*">
+                @error('profile_picture')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                <small class="text-muted">Max 2MB. Supported formats: JPEG, PNG, JPG, GIF</small>
             </div>
 
             <div class="mb-3">

@@ -9,9 +9,23 @@
     @if (Auth::check())
         <div class="position-fixed top-0 end-0 p-3 z-3">
             <div class="d-flex align-items-center gap-2">
-                <span class="text-light small">Hi {{ explode(' ', Auth::user()->name)[0] }} 🐸 !</span>
-                <a href="{{ route('profile.edit') }}" class="btn btn-outline-light btn-sm">Edit Profile</a>
-                <button type="button" class="btn btn-secondary btn-sm" id="logoutBtn">Logout</button>
+                @if(Auth::user()->profile_picture)
+                    <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                @else
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <span class="text-light small">{{ substr(explode(' ', Auth::user()->name)[0], 0, 1) }}</span>
+                    </div>
+                @endif
+                <div class="dropdown">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Hi {{ explode(' ', Auth::user()->name)[0] }} 🐸
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button class="dropdown-item text-danger" id="logoutBtn">Logout</button></li>
+                    </ul>
+                </div>
             </div>
         </div>
     @else
@@ -20,45 +34,49 @@
         </div>
     @endif
 
-    <div class="container mt-4 pt-5"> <!-- Add pt-5 to account for fixed top -->
-        <h1 class="mb-4">🐸 Frog List</h1>
-        
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Color</th>
-                    <th>Age</th>
-                    <th>Habitat</th>
-                    <th>Poisonous</th>
-                    <th>Weight (kg)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($frogs as $frog)
-                <tr data-frog-id="{{ $frog->id }}" class="frog-row" data-description="{{ $frog->description }}">
-                    <td>{{ $frog->id }}</td>
-                    <td>{{ $frog->name }}</td>
-                    <td>{{ $frog->color }}</td>
-                    <td>{{ $frog->age }}</td>
-                    <td>{{ $frog->habitat }}</td>
-                    <td>{{ $frog->is_poisonous ? 'Yes' : 'No' }}</td>
-                    <td>{{ $frog->weight }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        
-        @if (Auth::check())
+        <div class="container mt-4 pt-5"> 
+            <h1 class="mb-4">🐸 Frog List</h1>
+            
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>Picture</th>
+                        <th>Name</th>
+                        <th>Color</th>
+                        <th>Age</th>
+                        <th>Habitat</th>
+                        <th>Poisonous</th>
+                        <th>Weight (kg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($frogs as $frog)
+                    <tr data-frog-id="{{ $frog->id }}" class="frog-row" data-description="{{ $frog->description }}">
+                        <td>
+                            @if($frog->picture)
+                                <img src="{{ asset('storage/' . $frog->picture) }}" alt="{{ $frog->name }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                            @else
+                                <span class="text-muted">No image</span>
+                            @endif
+                        </td>
+                        <td>{{ $frog->name }}</td>
+                        <td>{{ $frog->color }}</td>
+                        <td>{{ $frog->age }}</td>
+                        <td>{{ $frog->habitat }}</td>
+                        <td>{{ $frog->is_poisonous ? 'Yes' : 'No' }}</td>
+                        <td>{{ $frog->weight }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            
             <div class="d-flex gap-2 mt-4">
                 <a href="{{ route('frog.create') }}" class="btn btn-success">Add Frog</a>
                 <button type="button" class="btn btn-lavender" id="editModeBtn">Edit Frog</button>
                 <button type="button" class="btn btn-danger" id="deleteModeBtn">Delete Frog</button>
                 <button type="button" class="btn btn-info" id="restoreBtn">Restore All</button>
             </div>
-        @endif
-    </div>
+        </div>
     
     <!-- Generic Confirmation Modal -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
